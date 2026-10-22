@@ -159,7 +159,14 @@
       <div class="modal-body">
         <div class="task-meta">
           <div><span class="meta-label">Статус</span><strong id="tm-status"></strong></div>
-          <div><span class="meta-label">Исполнитель</span><strong id="tm-assignee"></strong></div>
+          <div>
+            <span class="meta-label">Исполнитель</span>
+            <div>
+              <strong id="tm-assignee" class="admin-hide"></strong>
+              <select id="tm-assignee-select" class="admin-only hidden" style="max-width: 200px;" title="Сменить исполнителя (только админ)">
+              </select>
+            </div>
+          </div>
           <div><span class="meta-label">Срок</span><strong id="tm-due"></strong></div>
           <div><span class="meta-label">Автор</span><strong id="tm-creator"></strong></div>
         </div>

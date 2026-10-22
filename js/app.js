@@ -208,6 +208,7 @@
     // скрыть/показать всё, что только для админа
     $$(".admin-only").forEach((el) => el.classList.toggle("hidden", !isAdmin));
     $$(".admin-only-inline").forEach((el) => (el.style.display = isAdmin ? "" : "none"));
+    $$(".admin-hide").forEach((el) => el.classList.toggle("hidden", isAdmin));
     $("#task-create-section").classList.toggle("hidden", !isAdmin);
     $("#filter-assignee").parentElement?.classList.toggle("hidden", !isAdmin);
     if (!isAdmin) $("#tab-admin").classList.add("hidden");
@@ -346,7 +347,39 @@
     $("#tm-key").textContent = "TASK-" + t.id;
     $("#tm-title").textContent = t.title;
     $("#tm-status").textContent = STATUS_META[t.status].label;
+
+    // 1. Отображаем имя исполнителя
     $("#tm-assignee").textContent = profileById(t.assignee_id)?.full_name || "не назначен";
+
+    // 2. Заполняем селект исполнителей
+    const assigneeSelect = $("#tm-assignee-select");
+
+    // ОТЛАДКА: проверяем что в profiles
+    console.log("Profiles:", profiles);
+    console.log("Current assignee_id:", t.assignee_id);
+
+    if (!profiles || profiles.length === 0) {
+      console.warn("Profiles массив пуст!");
+      assigneeSelect.innerHTML = '<option value="">Загрузка...</option>';
+    } else {
+      const optionsHTML = profiles
+          .slice()
+          .sort((a, b) => (a.full_name || "").localeCompare(b.full_name || ""))
+          .map((p) => {
+            const name = p.full_name || `User ${p.id.slice(0, 8)}`;
+            console.log(`Adding option: ${p.id} - ${name}`);
+            return `<option value="${p.id}">${esc(name)}</option>`;
+          })
+          .join("");
+
+      assigneeSelect.innerHTML = '<option value="">— не назначен —</option>' + optionsHTML;
+    }
+
+    // 3. Устанавливаем текущее значение в селекте
+    assigneeSelect.value = t.assignee_id || "";
+    console.log("Select value set to:", assigneeSelect.value);
+    console.log("Select options count:", assigneeSelect.options.length);
+
     $("#tm-due").textContent = fmtDate(t.due_date);
     $("#tm-creator").textContent = profileById(t.creator_id)?.full_name || "—";
     $("#tm-desc").innerHTML = linkifyDocRefs(renderMarkdown(t.description)) || "<i>Без описания</i>";
@@ -366,12 +399,12 @@
 
     // ссылки на статьи внутри описания
     $("#tm-desc").querySelectorAll("[data-open-doc]").forEach((a) =>
-      a.addEventListener("click", (ev) => {
-        ev.preventDefault();
-        closeModal("#task-modal");
-        switchTab("docs");
-        selectDoc(Number(a.dataset.openDoc));
-      })
+        a.addEventListener("click", (ev) => {
+          ev.preventDefault();
+          closeModal("#task-modal");
+          switchTab("docs");
+          selectDoc(Number(a.dataset.openDoc));
+        })
     );
   }
 
@@ -392,6 +425,36 @@
       closeModal("#task-modal");
     })
   );
+  
+  // Смена исполнителя через селект
+  $("#tm-assignee-select").addEventListener("change", async (ev) => {
+    if (!openTaskId) return;
+
+    // Если значение пустое, отправляем null в БД
+    const newAssigneeId = ev.target.value || null;
+
+    const { error } = await db
+        .from("tasks")
+        .update({ assignee_id: newAssigneeId })
+        .eq("id", openTaskId);
+
+    if (error) {
+      toast("Не удалось сменить исполнителя: " + error.message, "error");
+      // Откатываем значение в селекте обратно при ошибке
+      const t = tasks.find((x) => x.id === openTaskId);
+      ev.target.value = t.assignee_id || "";
+      return;
+    }
+
+    toast("Исполнитель обновлен", "ok");
+
+    // Перезагружаем задачи (обновит канбан)
+    await loadTasks();
+
+    // Обновляем текст в модалке, не закрывая её
+    const updatedTask = tasks.find((x) => x.id === openTaskId);
+    $("#tm-assignee").textContent = profileById(updatedTask.assignee_id)?.full_name || "не назначен";
+  });
 
   async function loadComments(taskId) {
     const { data, error } = await db
