@@ -83,7 +83,7 @@
     return html.replace(/\[\[doc:(\d+)(?:\|([^\]]*))?\]\]/g, (_, id, text) => {
       const doc = docsCache.find((d) => d.id === Number(id));
       const label = text || (doc ? doc.title : "Статья #" + id);
-      return `<a href="#" class="doc-ref-link" data-open-doc="${id}">📄 ${esc(label)}</a>`;
+      return `<a href="#" class="doc-ref-link" data-open-doc="${id}">${esc(label)}</a>`;
     });
   }
 
@@ -197,7 +197,7 @@
 
     $("#auth-screen").classList.add("hidden");
     $("#app").classList.remove("hidden");
-    $("#current-user-label").textContent = `${me.full_name || me.id.slice(0, 6)}${isAdmin ? " · капитан 👑" : ""}`;
+    $("#current-user-label").textContent = `${me.full_name || me.id.slice(0, 6)}${isAdmin ? " · капитан" : ""}`;
 
     applyRoleUI();
     await refreshAll();
@@ -293,7 +293,7 @@
           <div class="t-title">${esc(t.title)}</div>
           <div class="t-meta">
             <span>👤 ${esc(assignee?.full_name || "не назначен")}</span>
-            <span class="t-due ${dueClass(t)}">📅 ${fmtDate(t.due_date)}</span>
+            <span class="t-due ${dueClass(t)}">${fmtDate(t.due_date)}</span>
           </div>`;
         card.addEventListener("click", () => openTask(t.id));
         col.appendChild(card);

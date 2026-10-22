@@ -11,7 +11,7 @@
   <!-- ==================== ЭКРАН ВХОДА ==================== -->
   <div id="auth-screen" class="auth-screen">
     <div class="auth-card">
-      <div class="auth-logo">📋 TeamBoard</div>
+      <div class="auth-logo">TeamBoard</div>
 
       <div class="auth-tabs">
         <button class="auth-tab active" data-mode="login">Вход</button>
@@ -46,7 +46,7 @@
   <div id="app" class="hidden">
     <header class="topbar">
       <div class="topbar-left">
-        <span class="brand">📋 TeamBoard</span>
+        <span class="brand">TeamBoard</span>
         <nav class="tabs">
           <button class="tab-btn active" data-tab="tasks">Задачи</button>
           <button class="tab-btn" data-tab="docs">Документация</button>
@@ -109,7 +109,7 @@
         <aside class="docs-sidebar card">
           <div class="docs-sidebar-head">
             <h2 class="card-title">Статьи</h2>
-            <button id="doc-create-btn" class="btn btn-primary btn-sm admin-only hidden">+ Статья</button>
+            <button id="doc-create-btn" class="btn btn-primary btn-sm">+ Статья</button>
           </div>
           <input type="search" id="docs-search" placeholder="Поиск по статьям…" />
           <ul id="docs-list" class="docs-list"></ul>
@@ -168,9 +168,10 @@
 
         <div class="status-controls">
           <span class="meta-label">Сменить статус:</span>
-          <button class="btn btn-sm status-btn" data-status="in_progress">▶ Взять в работу</button>
-          <button class="btn btn-sm status-btn" data-status="review">🔍 Отправить на проверку</button>
-          <button class="btn btn-sm status-btn admin-only-inline" data-status="done">✅ Закрыть (готово)</button>
+          <button class="btn btn-sm status-btn" data-status="in_progress">Взять в работу</button>
+          <button class="btn btn-sm status-btn" data-status="review">Отправить на проверку</button>
+          <button class="btn btn-sm status-btn admin-only-inline" data-status="done">Готово</button>
+          <button class="btn btn-sm status-btn admin-only-inline" data-status="closed">Закрыть</button>
         </div>
         <p class="hint" id="tm-status-hint">Рабочие могут переводить задачи в «В работе» и «На проверке». Закрывает задачи только капитан.</p>
 
