@@ -12,6 +12,6 @@
  * ===================================================================== */
 
 window.APP_CONFIG = {
-  SUPABASE_URL: "https://ВАШ-ПРОЕКТ.supabase.co",
-  SUPABASE_ANON_KEY: "ВСТАВЬТЕ_ANON_PUBLIC_КЮД_СЮДА",
+  SUPABASE_URL: "https://ylggldqbjbnneobxqpev.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlsZ2dsZHFiamJubmVvYnhxcGV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2OTM1MTcsImV4cCI6MjEwODI2OTUxN30.86SI_1rXEGZcgewV7B7nEeE5DZFAusUDEWMdbW14N2M",
 };
